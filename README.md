@@ -12,7 +12,7 @@ Each workflow addresses a concrete operational or revenue-facing problem and is 
 
 ## Repository Context
 
-This repository reflects work built across **multiple client environments, industries, and stages of operational maturity** — from early-stage teams to structured, process-heavy organizations.
+This repository reflects work built across **multiple client environments, industries, and stages of operational maturity** - from early-stage teams to structured, process-heavy organizations.
 
 The systems here follow a **freelancer ownership model**:
 designing, implementing, evolving, and maintaining automation in environments that are often incomplete, fast-moving, and constraint-driven.
@@ -20,7 +20,7 @@ designing, implementing, evolving, and maintaining automation in environments th
 Rather than focusing on a single niche, the workflows demonstrate **breadth with depth**:
 the ability to move fluidly across sales, operations, finance, support, marketing, and internal tooling while maintaining consistent engineering discipline.
 
-The emphasis throughout is on **practical automation** — systems that continue to work after handoff, scale with usage, and remain understandable to both technical and non-technical stakeholders.
+The emphasis throughout is on **practical automation** - systems that continue to work after handoff, scale with usage, and remain understandable to both technical and non-technical stakeholders.
 
 ---
 
@@ -164,7 +164,7 @@ Built to support sales reviews and performance analysis.
 
 ---
 
-If this work aligns with what you’re building or the problems you’re solving, feel free to reach out or connect.
+If this work aligns with what you’re building or the problems you’re solving, feel free to connect with me on LinkedIn.The link is available in my GitHub profile summary.
 Happy to discuss practical automation, system design, or collaboration opportunities.
 
 
