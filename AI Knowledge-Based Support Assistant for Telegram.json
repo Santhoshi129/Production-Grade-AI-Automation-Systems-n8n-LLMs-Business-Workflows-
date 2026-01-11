@@ -1,0 +1,280 @@
+{
+  "name": "AI Knowledge-Based Support Assistant for Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "id": "f611e34d-0de9-42b7-b438-bc522817f9ba",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1216,
+        544
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "T5jehjcyy5MZTrn1",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}"
+      },
+      "id": "7c968986-dcc4-4a26-bedf-5a5f9c75d2dc",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        1360,
+        512
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "8deb9aa3-4b45-4737-a6a5-4311fb460b04",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1744,
+        384
+      ],
+      "webhookId": "cfeeb7fc-6dad-4482-b8c7-73998bfc613f",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "uc5lB3NBF92g9pMN",
+          "name": "Telegram account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "You are a helpful Customer Support Agent, cross-reference the Google Doc for any customer queries for relevant information. If relevant information is not found, do not make up facts. Plainly let the user know that the information isn't available. \n\n#Tonality\nFriendly, casual and helpful. if user or customer says hi, inform them that you are a Friendly Customer Support Agent"
+        }
+      },
+      "id": "ccf10ec2-eae2-47be-9be7-7bf7b3d974cb",
+      "name": "Customer Support AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1264,
+        384
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "https://docs.google.com/document/d/1V_zsDgr5XulmWiJLgqvLe1AgzeL6zU4cVgX_UPdAhgs/edit?tab=t.0"
+      },
+      "id": "fd291678-8522-4e00-94bc-7033689f14b3",
+      "name": "Get a document in Google Docs",
+      "type": "n8n-nodes-base.googleDocsTool",
+      "position": [
+        1488,
+        528
+      ],
+      "typeVersion": 2,
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "AfI9EzXINf8p4oNQ",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        832,
+        384
+      ],
+      "id": "5d1706e1-e22f-4a5a-a75d-06185bdf6167",
+      "name": "Telegram Trigger",
+      "webhookId": "89401834-22f7-41da-aecf-92806a0cb5a2",
+      "credentials": {
+        "telegramApi": {
+          "id": "uc5lB3NBF92g9pMN",
+          "name": "Telegram account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Telegram User Interaction Trigger\nThis trigger listens for incoming messages from users on Telegram.\nEach new message initiates the workflow and acts as the primary user interface for the AI-powered support assistant.",
+        "height": 320,
+        "width": 368,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        704,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "937ba0f7-436e-42cc-95ef-7bacc55aba4c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### AI Intelligence & Knowledge Layer\nThis block handles understanding user messages, maintaining conversation context, and generating accurate responses.\nThe AI references official documentation as its single source of truth and avoids guessing when information is unavailable.",
+        "height": 448,
+        "width": 432
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1168,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "8d8bc28b-93d6-4ed7-bc25-d2afb95b6343",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "### Customer Response Delivery\nSends the final AI-generated response back to the user through Telegram, completing the support interaction in real time.",
+        "height": 336,
+        "width": 352,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1664,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "66eac83e-f1d1-4e99-b64c-77577bd8c91f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "\n### This automation reduces manual support workload, improves response consistency, and provides instant customer assistance through a familiar messaging platform. ###",
+        "height": 704,
+        "width": 1776,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        112
+      ],
+      "typeVersion": 1,
+      "id": "84da4907-4c1f-45d8-9ba2-ef3199c4ddf2",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Customer Support AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Customer Support AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Support AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a document in Google Docs": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Support AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Customer Support AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4f259ea5-07f9-40b8-86be-b8ca392afea1",
+  "meta": {
+    "templateId": "4875",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "df9e926e4db944a4b8e5dbae635b7c198e7118577d93d38bd64b1952645ba4f0"
+  },
+  "id": "5NZKb2omkEkyaTxp",
+  "tags": [
+    {
+      "updatedAt": "2026-01-10T10:09:12.580Z",
+      "createdAt": "2026-01-10T10:09:12.580Z",
+      "id": "5xB0eq6SH5Jj3nSE",
+      "name": "Customer Support"
+    },
+    {
+      "updatedAt": "2026-01-10T10:08:45.023Z",
+      "createdAt": "2026-01-10T10:08:45.023Z",
+      "id": "6kF1xCtfAihbcw0q",
+      "name": "ChatBot"
+    },
+    {
+      "updatedAt": "2026-01-10T06:33:32.574Z",
+      "createdAt": "2026-01-10T06:33:32.574Z",
+      "id": "8jDT2j8FrQOpgnSD",
+      "name": "Business Operations"
+    }
+  ]
+}
