@@ -1,0 +1,715 @@
+{
+  "name": "AI-Powered Lead Intelligence & Smart Routing System",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**System Prompt:**\n\nYou are an AI assistant designed to process new leads and generate appropriate responses. Your role includes analyzing lead notes, categorizing them, and generating an email from the system to inform the relevant contact about the inquiry. Do not send the email as if it is directly from the customer; instead, draft it as a notification from the system summarizing the inquiry.\n\n### **Process Flow**\n\n1. **Analyzing Lead Notes:**\n - Extract key details such as the customer name, organization, contact information, and their specific request. \n - Determine if the inquiry relates to products, services, or solutions offered by the company.\n\n2. **Finding the Appropriate Contact(s):**\n - Search the contact database to find the responsible person(s) for the relevant product, service, or solution. \n - If one person is responsible, provide their email. \n - If multiple people are responsible, list all emails separated by commas.\n\n3. **Generating an Email Notification:**\n - Draft a professional email as a notification from the system.\n - Summarize the customer’s inquiry.\n - Include all relevant details to assist the recipient in addressing the inquiry.\n\n4. **Handling Invalid Leads:**\n - If the inquiry is unrelated to products, services, or solutions (e.g., job inquiries or general product inquiries), classify it as invalid and return: \n `\"Invalid Lead - Not related to products, services, or solutions.\"`\n\n### **Output Requirements**\n\n1. **For Relevant Leads:**\n - **Email Address(es):** Provide the appropriate email(s). \n - **Email Message Body:** Generate an email notification from the system summarizing the inquiry.\n\n2. **For Invalid Leads:**\n - Return: `\"Invalid Lead - Not related to products, services, or solutions.\"`\n\n\n### **Email Template for Relevant Leads**\n\n**Email Address(es):** [Relevant Email IDs]\n\n**Email Message Body:**\n\n_Subject: New Inquiry from Customer Regarding [Product/Service/Solution]_ \n\nDear [Recipient(s)], \n\nWe have received a new inquiry from a customer through our system. Below are the details: \n\n**Customer Name:** [Customer Name] \n**Organization:** [Organization Name] \n**Contact Information:** [Contact Details] \n\n**Inquiry Summary:** \n[Summarized description of the customer's request, e.g., “The customer is seeking to upgrade their restroom facilities with touchless soap dispensers and tissue holders installed behind mirrors. They have requested a site visit to assess the location and provide a proposal.”] \n\n**Action Required:** \nPlease prioritize this inquiry and reach out to the customer promptly to address their requirements. \n\nThank you, \n[Your System Name] \n\n\n### **Example Output**\n\n**Input Lead Notes:**\n*\"Dear Syncbricks, We are looking to Develop Workflow Automation Soluition for our company, can you let us know the details what do you offer in tems of this.\"*\n\n**Output:**\n\n- **Email Address(es):** employee@syncbricks.com\n\n- **Email Message Body:** \n\n_Subject: Workflow Automation Platform Integration_ \n\nDear -Emploiyee Name (s) --, \n\nWe have received a new inquiry from a customer through our system. Below are the details: \n\n**Customer Name:** Amjid Ali \n**Organization:** Syncbricks LLC\n**Contact Information:** 123456789 \n\n**Inquiry Summary:** \nThe customer is asking for workflow automation for their company \n\n**Action Required:** \nPlease prioritize this inquiry and reach out to the customer promptly to address their requirements. \n\nThank you, \nSyncbricks LLC\n\n---\nHere are the Lead Details\nLead Name : {{ $json.data.lead_name }}\nCompany : {{ $json.data.company_name }}\nSource : {{ $json.data.source }}\nNotes : {{ $json.data.notes }}\nCity : {{ $json.data.city }}\nCountry : {{ $json.data.country }}\nMobile : {{ $json.data.mobile_no }}",
+        "options": {}
+      },
+      "id": "4cc16cda-8d03-4dfc-843f-f64df936bcea",
+      "name": "Customer Lead AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1360,
+        208
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "86dae4bb-069f-43ae-8b9a-36ce01df8a69",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1200,
+        544
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1gtdrAe-jjQH9gQdXA9PJ5y3dSAN4i6k_Rs5sDyALIfU",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gtdrAe-jjQH9gQdXA9PJ5y3dSAN4i6k_Rs5sDyALIfU/edit?usp=drivesdk",
+          "cachedResultName": "Abbriviations List"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gtdrAe-jjQH9gQdXA9PJ5y3dSAN4i6k_Rs5sDyALIfU/edit#gid=0",
+          "cachedResultName": "abbrivaitions"
+        },
+        "options": {}
+      },
+      "id": "829e57b7-5873-4e73-b025-4e13669c5fc0",
+      "name": "Abbriviations",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        1344,
+        528
+      ],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "82a674a2-4d12-45f2-b276-cc95cf7b2e93",
+              "name": "body",
+              "type": "object",
+              "value": "={{ $json.body }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "00e65593-95c2-4529-86db-8e45801a8a81",
+      "name": "Lead Body",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        368,
+        384
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "2b184de2-a64e-44e3-8f25-645539681533",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.body.source }}",
+              "rightValue": "Website"
+            },
+            {
+              "id": "9632cf65-11a1-483c-95c8-94bfe84fb243",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.body.status }}",
+              "rightValue": "Open"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e7b1dc29-9ca5-4e77-aa0e-f533fc985ec5",
+      "name": "Source Website and Status Open",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        80,
+        384
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "toRecipients": "= {{ $('Fields for Outlook').item.json.email_addresses }}",
+        "subject": "={{ $('Fields for Outlook').item.json.subject }}",
+        "bodyContent": "={{ $json.html }}\n<a href=\"https://erpnext.syncbricks.com/app/lead/{{ $('Webhook').item.json.body.name }}\" target=\"_blank\" rel=\"noopener noreferrer\">Here is Lead {{ $('Source Website and Status Open').item.json.body.name }} </a>\n",
+        "additionalFields": {
+          "bodyContentType": "html"
+        }
+      },
+      "id": "767ccbae-dab3-4739-85d4-b647921854df",
+      "name": "Microsoft Outlook",
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "position": [
+        3184,
+        352
+      ],
+      "typeVersion": 2,
+      "webhookId": "91e54b39-e68a-4585-b850-91b4666f865e"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cdce31fb-2ec9-45ce-a4ac-a6ff9c811dc3",
+              "name": "email_body",
+              "type": "string",
+              "value": "={{ $json.email_body }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e81d7922-7541-4f5e-9c96-ebac664e963d",
+      "name": "Email Body Text Generated by AI",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2672,
+        352
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input text from the `output` field\nconst textOutput = $json?.output || '';\n\n// Function to extract values from the text\nfunction extractFields(text) {\n const fields = {};\n\n // Regular expressions to extract each field\n const emailMatch = text.match(/\\*\\*Email Address\\(es\\):\\*\\*\\s*([^\\n]+)/);\n const subjectMatch = text.match(/_Subject:\\s*([^_]+)/);\n const emailBodyMatch = text.match(/Dear[\\s\\S]+/);\n\n // Assign extracted values to the fields\n fields.email_addresses = emailMatch ? emailMatch[1].trim() : null;\n fields.subject = subjectMatch ? subjectMatch[1].trim() : null;\n fields.email_body = emailBodyMatch ? emailBodyMatch[0].trim() : null;\n\n return fields;\n}\n\n// Extract fields from the output\nconst extractedFields = extractFields(textOutput);\n\n// Return the fields as JSON\nreturn {\n json: extractedFields\n};\n"
+      },
+      "id": "e1110cba-83c3-4fda-bd8b-8cda5dee17ec",
+      "name": "Fields for Outlook",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2368,
+        352
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input email body\nconst emailBody = $json.email_body || '';\n\n// Function to convert plain text email body into HTML\nfunction formatEmailBodyAsHtml(body) {\n // Replace markdown-like sections with corresponding HTML\n let htmlBody = body\n .replace(/\\*\\*Customer Name:\\*\\* (.+)/, '<p><strong>Customer Name:</strong> $1</p>')\n .replace(/\\*\\*Organization:\\*\\* (.+)/, '<p><strong>Organization:</strong> $1</p>')\n .replace(/\\*\\*Contact Information:\\*\\* (.+)/, '<p><strong>Contact Information:</strong> $1</p>')\n .replace(/\\*\\*Inquiry Summary:\\*\\*\\s*([\\s\\S]+?)(?=\\n\\n\\*\\*Action Required:)/, '<p><strong>Inquiry Summary:</strong> $1</p>')\n .replace(/\\*\\*Action Required:\\*\\*\\s*([\\s\\S]+)/, '<p><strong>Action Required:</strong> $1</p>');\n\n // Wrap each paragraph in `<p>` tags for better readability\n htmlBody = htmlBody\n .replace(/Dear (.+?),/, '<p>Dear <strong>$1</strong>,</p>')\n .replace(/Thank you,\\s+(.+)/, '<p>Thank you,<br><strong>$1</strong></p>');\n\n return htmlBody;\n}\n\n// Convert the email body into HTML\nconst formattedHtmlBody = formatEmailBodyAsHtml(emailBody);\n\n// Return the formatted HTML\nreturn {\n html: formattedHtmlBody\n};\n"
+      },
+      "id": "93c9151c-c5d7-40c3-a182-171dd6a72aa6",
+      "name": "Email Body for Outlook",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2864,
+        352
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "bc81994a-2ad8-4af7-8c58-2c7e58a0fd2e",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.data.notes }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "16a4a46d-8f26-4b40-810e-200926cff079",
+      "name": "Inquiry has Notes",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        928,
+        384
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "ddd5e8a2-277f-4db6-b38d-28a7b91a2f66",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "**Invalid Lead - Not related to products, services, or solutions.**"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "37b6ad8f-20fd-4674-9f79-d101ac987728",
+      "name": "Inquiry is Valid?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        2048,
+        368
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "you-must-provide-the-doc-id"
+      },
+      "id": "daf3ca74-9f69-4386-9e20-646433d6324a",
+      "name": "Company Profile",
+      "type": "n8n-nodes-base.googleDocsTool",
+      "position": [
+        1472,
+        528
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "documentURL": "you-must-provide-the-doc-id"
+      },
+      "id": "b9e90f86-0348-42df-bdb2-a5b55506e702",
+      "name": "Company Policies",
+      "type": "n8n-nodes-base.googleDocsTool",
+      "position": [
+        1584,
+        496
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "=Telephone Directory"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "",
+          "cachedResultUrl": "",
+          "cachedResultName": ""
+        }
+      },
+      "id": "db85430a-e606-4913-b159-902ad536f3cc",
+      "name": "Company Contact Database",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        1712,
+        528
+      ],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "content": "### Lead Qualification Filter\nFilters incoming leads based on predefined criteria to ensure only relevant and actionable inquiries enter the workflow.\n",
+        "height": 419,
+        "width": 298,
+        "color": 6
+      },
+      "id": "46d68c58-a82d-4ef4-9861-b977486ed968",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### AI Classification Output\nIf the inquiry is unrelated to the company’s products or services, it is classified as invalid.\nValid inquiries continue through the workflow for notification and follow-up.\nThis design allows flexible extensions such as logging, reporting, or automated responses.",
+        "height": 660,
+        "width": 302.58963031819115,
+        "color": 3
+      },
+      "id": "26d8e423-b46b-42dd-945b-302a00b17dc6",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1952,
+        32
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Lead Intelligence Agentt (AI)\nThis AI agent analyzes customer inquiries, understands the requested product, service, or solution, and cross-references company knowledge sources (products, services, policies, and internal contacts).\nBased on this analysis, it determines the most appropriate internal stakeholder(s) and prepares a structured system-generated notification.e",
+        "height": 648.5051458745236,
+        "width": 764.2159851725196,
+        "color": 7
+      },
+      "id": "06e49dc4-daac-4f10-a25e-d028c304834c",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1120,
+        32
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Lead Creation Event\nThis workflow is triggered automatically when a new lead is created in the ERP system\n",
+        "height": 418,
+        "width": 398,
+        "color": 5
+      },
+      "id": "65ea16df-471f-41f5-95c8-e4b9e05fbf54",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -416,
+        192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Email Content Formatting. \nTransforms the AI-generated email content into a clean, structured HTML format to ensure professional appearance and compatibility across email clients.",
+        "height": 374,
+        "width": 389,
+        "color": 4
+      },
+      "id": "5b911c3e-5a85-45c0-8bb2-d5f93b762d66",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2624,
+        192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Retrieve Lead Details\nFetches complete lead information from ERPNext, with a primary focus on the inquiry notes provided by the customer.",
+        "height": 431,
+        "width": 249,
+        "color": 5
+      },
+      "id": "a15db74c-1a36-4647-a68c-7777df67c161",
+      "name": "Sticky Note12",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Lead Identification\nExtracts the unique Lead ID from ERPNext, which is required to fetch complete lead details in subsequent steps.\n",
+        "height": 427,
+        "width": 223,
+        "color": 6
+      },
+      "id": "f386d26a-b83b-447b-818e-b50895fa1903",
+      "name": "Sticky Note13",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        320,
+        192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Email Dispatch\nSends the finalized, professionally formatted notification email to the identified internal recipient(s).",
+        "height": 358,
+        "width": 399,
+        "color": 6
+      },
+      "id": "f31011bc-164c-4fe4-a802-9fe097734dd1",
+      "name": "Sticky Note14",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3040,
+        192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Inquiry Validation – Notes Check\nEnsures the lead contains meaningful inquiry notes before proceeding with AI analysis and routing.",
+        "height": 431,
+        "width": 249,
+        "color": 5
+      },
+      "id": "6dabfa61-9428-4a87-a54e-fb215221f387",
+      "name": "Sticky Note16",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        848,
+        192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "=https://erpnext.syncbricks.com/api/resource/Lead/{{ $('Source Website and Status Open').item.json.body.name }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "erpNextApi",
+        "options": {}
+      },
+      "id": "83dfb754-7fa1-469b-91f8-85272738323f",
+      "name": "Get Lead Data from ERPNext",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        640,
+        384
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "content": "### Email Preparation & Structuring\nExtracts and prepares all required email components, including recipient addresses, subject line, and message body.",
+        "height": 372,
+        "width": 303,
+        "color": 3
+      },
+      "id": "5f0fd28e-dfe5-4ac4-9be7-ca79d4cf899a",
+      "name": "Sticky Note10",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2288,
+        192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-lead-generated-in-erpnext",
+        "options": {}
+      },
+      "id": "82c02997-b20b-4770-8076-84a3e886d935",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        -304,
+        384
+      ],
+      "webhookId": "a39ea4e2-99b7-4ae1-baff-9fb370333e2a",
+      "typeVersion": 2
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Source Website and Status Open",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Body": {
+      "main": [
+        [
+          {
+            "node": "Get Lead Data from ERPNext",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Abbriviations": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Lead AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Company Profile": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Lead AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Company Policies": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Lead AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inquiry has Notes": {
+      "main": [
+        [
+          {
+            "node": "Customer Lead AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inquiry is Valid?": {
+      "main": [
+        [
+          {
+            "node": "Fields for Outlook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Customer Lead AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fields for Outlook": {
+      "main": [
+        [
+          {
+            "node": "Email Body Text Generated by AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Lead AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Inquiry is Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Body for Outlook": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Outlook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Company Contact Database": {
+      "ai_tool": [
+        [
+          {
+            "node": "Customer Lead AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Lead Data from ERPNext": {
+      "main": [
+        [
+          {
+            "node": "Inquiry has Notes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Source Website and Status Open": {
+      "main": [
+        [
+          {
+            "node": "Lead Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Body Text Generated by AI": {
+      "main": [
+        [
+          {
+            "node": "Email Body for Outlook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6d972e6d-bcf1-443e-a1a2-493773379615",
+  "meta": {
+    "instanceId": "df9e926e4db944a4b8e5dbae635b7c198e7118577d93d38bd64b1952645ba4f0"
+  },
+  "id": "cvPKidQzCuPfYKnR",
+  "tags": [
+    {
+      "updatedAt": "2026-01-10T06:33:32.574Z",
+      "createdAt": "2026-01-10T06:33:32.574Z",
+      "id": "8jDT2j8FrQOpgnSD",
+      "name": "Business Operations"
+    },
+    {
+      "updatedAt": "2025-12-17T11:39:05.197Z",
+      "createdAt": "2025-12-17T11:39:05.197Z",
+      "id": "9eNSwrABvqbfRvbQ",
+      "name": "Sales ops"
+    },
+    {
+      "updatedAt": "2026-01-10T08:55:50.497Z",
+      "createdAt": "2026-01-10T08:55:50.497Z",
+      "id": "AWjE4NHMdteJ5HU1",
+      "name": "Lead Management"
+    },
+    {
+      "updatedAt": "2026-01-10T08:57:11.625Z",
+      "createdAt": "2026-01-10T08:57:11.625Z",
+      "id": "OCMr8th6ahZFMjYs",
+      "name": "ERPNext"
+    },
+    {
+      "updatedAt": "2026-01-10T08:03:36.877Z",
+      "createdAt": "2026-01-10T08:03:36.877Z",
+      "id": "QAL1jtK0uMQASeBn",
+      "name": "Client Communication"
+    }
+  ]
+}
